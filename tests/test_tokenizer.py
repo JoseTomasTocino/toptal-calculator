@@ -1,6 +1,7 @@
 from unittest import TestCase
 
-from calculator.parser import tokenizer, tokens
+from calculator.parser import tokens
+from calculator.parser.tokenizer import tokenize
 
 
 class TestTokenizer(TestCase):
@@ -20,8 +21,7 @@ class TestTokenizer(TestCase):
             tokens.OperandToken(5)
         ]
 
-        tok = tokenizer.Tokenizer()
-        computed_token_list = tok.tokenize(expression)
+        computed_token_list = tokenize(expression)
 
         self.assertListEqual(computed_token_list, token_list)
 
@@ -37,8 +37,7 @@ class TestTokenizer(TestCase):
             tokens.OperandToken(1)
         ]
 
-        tok = tokenizer.Tokenizer()
-        computed_token_list = tok.tokenize(expression)
+        computed_token_list = tokenize(expression)
 
         self.assertListEqual(computed_token_list, token_list)
 
@@ -58,8 +57,7 @@ class TestTokenizer(TestCase):
             tokens.CloseParenthesisToken()
         ]
 
-        tok = tokenizer.Tokenizer()
-        computed_token_list = tok.tokenize(expression)
+        computed_token_list = tokenize(expression)
 
         self.assertListEqual(computed_token_list, token_list)
 
@@ -72,8 +70,7 @@ class TestTokenizer(TestCase):
             tokens.CloseParenthesisToken()
         ]
 
-        tok = tokenizer.Tokenizer()
-        computed_token_list = tok.tokenize(expression)
+        computed_token_list = tokenize(expression)
 
         self.assertListEqual(computed_token_list, token_list)
 
@@ -84,8 +81,7 @@ class TestTokenizer(TestCase):
             tokens.OperandToken(10),
         ]
 
-        tok = tokenizer.Tokenizer()
-        computed_token_list = tok.tokenize(expression)
+        computed_token_list = tokenize(expression)
 
         self.assertListEqual(computed_token_list, token_list)
 
@@ -96,8 +92,7 @@ class TestTokenizer(TestCase):
             tokens.PiConstantToken()
         ]
 
-        tok = tokenizer.Tokenizer()
-        computed_token_list = tok.tokenize(expression)
+        computed_token_list = tokenize(expression)
 
         self.assertListEqual(computed_token_list, token_list)
 
@@ -112,7 +107,6 @@ class TestTokenizer(TestCase):
             tokens.CloseParenthesisToken()
         ]
 
-        tok = tokenizer.Tokenizer()
-        computed_token_list = tok.tokenize(expression)
+        computed_token_list = tokenize(expression)
 
         self.assertListEqual(computed_token_list, token_list)
