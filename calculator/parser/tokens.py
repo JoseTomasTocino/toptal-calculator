@@ -74,3 +74,13 @@ class PiConstantToken(Token): pass
 
 
 class EulerConstantToken(Token): pass
+
+
+is_operand = lambda token: isinstance(token, OperandToken)
+is_variable = lambda token: isinstance(token, VariableToken)
+is_constant = lambda token: isinstance(token, (PiConstantToken, EulerConstantToken))
+is_operator = lambda token: isinstance(token, (
+ProductOperatorToken, DivisionOperatorToken, PlusOperatorToken, MinusOperatorToken))
+is_function = lambda token: isinstance(token, (LogFunctionToken, SinFunctionToken, CosFunctionToken))
+is_left_paren = lambda token: isinstance(token, OpenParenthesisToken)
+is_right_paren = lambda token: isinstance(token, CloseParenthesisToken)

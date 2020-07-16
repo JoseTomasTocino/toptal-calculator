@@ -45,11 +45,13 @@ class TestTokenizer(TestCase):
         expression = "2x + 1 = 2(1-x)"
         token_list = [
             tokens.OperandToken(2),
+            tokens.ProductOperatorToken(),
             tokens.VariableToken('x'),
             tokens.PlusOperatorToken(),
             tokens.OperandToken(1),
             tokens.EqualSignToken(),
             tokens.OperandToken(2),
+            tokens.ProductOperatorToken(),
             tokens.OpenParenthesisToken(),
             tokens.OperandToken(1),
             tokens.MinusOperatorToken(),
@@ -110,3 +112,19 @@ class TestTokenizer(TestCase):
         computed_token_list = tokenize(expression)
 
         self.assertListEqual(computed_token_list, token_list)
+    #
+    #
+    # def test_tokenize_8(self):
+    #     expression = "2x + 1"
+    #     token_list = [
+    #         tokens.SinFunctionToken(),
+    #         tokens.OpenParenthesisToken(),
+    #         tokens.OperandToken(1.5),
+    #         tokens.ProductOperatorToken(),
+    #         tokens.PiConstantToken(),
+    #         tokens.CloseParenthesisToken()
+    #     ]
+    #
+    #     computed_token_list = tokenize(expression)
+    #
+    #     self.assertListEqual(computed_token_list, token_list)
