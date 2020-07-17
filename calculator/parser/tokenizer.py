@@ -1,6 +1,10 @@
+import logging
+
 from calculator.parser import tokens
 from calculator.parser.tokens import is_variable, is_operand, is_function, is_operator, is_left_paren, is_right_paren, \
     is_constant
+
+logger = logging.getLogger(__name__)
 
 
 def tokenize(input: str):
@@ -81,17 +85,28 @@ def tokenize(input: str):
     # Token List postprocessing, in particular:
     # - Add product operator between operand and variable
     # - Add product operator between operand and open parenthesis
+    # - Add product operator between variable and open parenthesis
 
     processed_token_list = []
 
     for i, tok in enumerate(token_list):
         processed_token_list.append(tok)
 
-        if is_operand(tok) and i < len(token_list) - 1:
+        if i == len(token_list) - 1:
+            break
+
+        if is_operand(tok):
             if is_variable(token_list[i + 1]):
+                logger.debug("Adding implicit product operator")
                 processed_token_list.append(tokens.ProductOperatorToken())
 
             elif is_left_paren(token_list[i + 1]):
+                logger.debug("Adding implicit product operator")
+                processed_token_list.append(tokens.ProductOperatorToken())
+
+        elif is_variable(tok):
+            if is_left_paren(token_list[i + 1]):
+                logger.debug("Adding implicit product operator")
                 processed_token_list.append(tokens.ProductOperatorToken())
 
     return processed_token_list
