@@ -56,11 +56,11 @@ class EqualSignToken(Token): pass
 
 
 class LogFunctionToken(Token):
-    def __init__(self):
-        self.has_custom_base = False
+    def __init__(self, has_custom_base=False):
+        self.has_custom_base = has_custom_base
 
     def __str__(self):
-        return "Token: LogFunction ({})".format("Custom base" if self.has_custom_base else "10-base")
+        return "Token: LogFunctionToken ({})".format("Custom base" if self.has_custom_base else "10-base")
 
 class LnFunctionToken(Token): pass
 
@@ -81,8 +81,8 @@ class TanFunctionToken(Token):
 
 
 class CtanFunctionToken(Token):
-    def __init__(self):
-        self.oper = lambda x: 1 / math.tan(x)
+    def oper(self, x):
+        return 1 / math.tan(x)
 
 
 class PiConstantToken(Token):

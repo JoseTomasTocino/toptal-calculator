@@ -1,7 +1,7 @@
 import logging
 
-from calculator.parser import tokens
-from calculator.parser.tokens import is_variable, is_operand, is_function, is_operator, is_left_paren, is_right_paren, \
+from calculator import tokens
+from calculator.tokens import is_variable, is_operand, is_function, is_operator, is_left_paren, is_right_paren, \
     is_constant
 
 logger = logging.getLogger(__name__)
@@ -181,27 +181,4 @@ def infix_to_postfix(token_list: list):
 
         postfix_token_list.append(op_stack.pop())
 
-    # for token in token_list:
-    #     if isinstance(token, tokens.OperandToken) or isinstance(token, tokens.VariableToken):
-    #         postfix_token_list.append(token)
-    #
-    #     elif isinstance(token, tokens.OpenParenthesisToken):
-    #         op_stack.append(token)
-    #
-    #     elif isinstance(token, tokens.CloseParenthesisToken):
-    #         topToken = op_stack.pop()
-    #
-    #         while not isinstance(topToken, tokens.OpenParenthesisToken):
-    #             postfix_token_list.append(topToken)
-    #             topToken = op_stack.pop()
-    #     else:
-    #         while op_stack and (precedences[type(op_stack[-1])] >= precedences[type(token)]):
-    #             postfix_token_list.append(op_stack.pop())
-    #         op_stack.append(token)
-    #
-    # while op_stack:
-    #     postfix_token_list.append(op_stack.pop())
-
     return postfix_token_list
-
-    pass

@@ -1,6 +1,6 @@
 import logging
 
-from calculator.parser.parser import Parser
+from calculator import evaluator
 
 
 # input: (3+(4-1))*5
@@ -28,30 +28,34 @@ from calculator.parser.parser import Parser
 # output: -1
 
 def main():
-    p = Parser()
+    # evaluator.evaluate("( A + B ) * ( C + D )")
+    # evaluator.evaluate("3+sin(6*3)-7")
+    # evaluator.evaluate("2x + 1 = 2(1-x)")
+    # evaluator.evaluate("2x + 1 = 2 - 2x")
+    # evaluator.evaluate("(3+(4-1))*5")
+    # evaluator.evaluate("2 * x + 0.5 = 1")
+    # evaluator.evaluate("2x + 1 = 2(1-x)")
+    # evaluator.evaluate("(x-2)*(2-3)=0")
+    # evaluator.evaluate("4x-7(2-x)=3x+2")
+    # evaluator.evaluate("2(w+3)-10=6(32-3w)")
 
-    # p.parse("( A + B ) * ( C + D )")
-    # p.parse("3+sin(6*3)-7")
-    # p.parse("2x + 1 = 2(1-x)")
-    # p.parse("2x + 1 = 2 - 2x")
-    # p.parse("(3+(4-1))*5")
-    # p.parse("2 * x + 0.5 = 1")
-    # p.parse("2x + 1 = 2(1-x)")
-    p.parse("(x-2)*(2-3)=0")
+    # evaluator.evaluate("(4-2z)/3 = 3/4 - (5z)/6")
 
-    # p.parse("(3+(4-1))*5")
-    # p.parse("2 * x + 0.5 = 1")
-    # p.parse("2x + 1 = 2(1-x)")
-    # p.parse("Log(10)")
-    # p.parse("Log10")
-    # p.parse("Log100(10)")
-    # p.parse("sinpi")
-    # p.parse("sin(pi)")
-    # p.parse("sin(1.5pi)")
-    # p.parse("sin(1.5*pi)")
+    evaluator.evaluate("10 log 5 +", True)
+
+    # evaluator.evaluate("(3+(4-1))*5")
+    # evaluator.evaluate("2 * x + 0.5 = 1")
+    # evaluator.evaluate("2x + 1 = 2(1-x)")
+    # evaluator.evaluate("Log(10)")
+    # evaluator.evaluate("Log10")
+    # evaluator.evaluate("Log100(10)")
+    # evaluator.evaluate("sinpi")
+    # evaluator.evaluate("sin(pi)")
+    # evaluator.evaluate("sin(1.5pi)")
+    # evaluator.evaluate("sin(1.5*pi)")
 
 
 if __name__ == '__main__':
-    # logging.basicConfig(level=logging.DEBUG)
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
+    # logging.basicConfig(level=logging.INFO)
     main()
