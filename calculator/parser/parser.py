@@ -1,9 +1,11 @@
 import logging
+import math
 
 from calculator.parser.tokenizer import tokenize, infix_to_postfix
 from calculator.parser.tokens import EqualSignToken, OperandToken, is_variable, MinusOperatorToken, \
     OpenParenthesisToken, CloseParenthesisToken, is_operand, is_operator, PlusOperatorToken, ProductOperatorToken, \
-    DivisionOperatorToken
+    DivisionOperatorToken, is_function, is_trigonometric, LnFunctionToken, LogFunctionToken, \
+    is_constant
 
 logger = logging.getLogger(__name__)
 
@@ -73,9 +75,14 @@ class Parser:
             logger.debug("Converting to postfix")
             token_list = infix_to_postfix(token_list)
 
-        stack = []
-        logger.debug("Tokens:")
+        logger.debug("Tokens in postfix:")
         for tok in token_list:
+            logger.debug("    %r", tok)
+
+        stack = []
+        logger.debug("Evaluating token list:")
+        for tok in token_list:
+            logger.debug("")
             logger.debug("Stack: %r", stack)
             logger.debug("%r", tok)
 
@@ -86,6 +93,9 @@ class Parser:
 
             elif is_variable(tok):
                 node = EquationNode(coefficient=1)
+
+            elif is_constant(tok):
+                node = EquationNode(constant=tok.value)
 
             else:
                 if is_operator(tok):
@@ -142,17 +152,19 @@ class Parser:
 
                     elif isinstance(tok, ProductOperatorToken):
                         constant = 0
-                        coefficient = 0
+                        coefficient = None
 
                         if first_operand.has_constant():
                             if second_operand.has_constant():
                                 constant += first_operand.constant * second_operand.constant
 
                             if second_operand.has_coef():
+                                if coefficient is None: coefficient = 0
                                 coefficient += first_operand.constant * second_operand.coefficient
 
                         if first_operand.has_coef():
                             if second_operand.has_constant():
+                                if coefficient is None: coefficient = 0
                                 coefficient += first_operand.coefficient * second_operand.constant
 
                             if second_operand.has_coef():
@@ -174,22 +186,63 @@ class Parser:
                         node = EquationNode(coefficient=coefficient, constant=constant)
 
                     elif isinstance(tok, DivisionOperatorToken):
-                        constant = None
+                        constant = 0
                         coefficient = None
 
-                        if first_operand.has_constant() and second_operand.has_constant():
-                            constant = first_operand.constant / second_operand.constant
+                        if first_operand.has_constant():
+                            if second_operand.has_constant():
+                                constant += first_operand.constant / second_operand.constant
 
-                        elif first_operand.has_constant() and second_operand.has_coef():
-                            coefficient = first_operand.constant / second_operand.coefficient
+                            if second_operand.has_coef():
+                                if coefficient is None: coefficient = 0
+                                coefficient += first_operand.constant / second_operand.coefficient
 
-                        elif first_operand.has_coef() and second_operand.has_constant():
-                            coefficient = first_operand.coefficient / second_operand.constant
+                        if first_operand.has_coef():
+                            if second_operand.has_constant():
+                                if coefficient is None: coefficient = 0
+                                coefficient += first_operand.coefficient / second_operand.constant
 
-                        else:
-                            raise RuntimeError("Unsupported expression, can't have exponential variables")
+                            if second_operand.has_coef():
+                                raise RuntimeError("Unsupported expression, can't have exponential variables")
+
+                        # if first_operand.has_constant() and second_operand.has_constant():
+                        #     constant = first_operand.constant / second_operand.constant
+                        #
+                        # elif first_operand.has_constant() and second_operand.has_coef():
+                        #     coefficient = first_operand.constant / second_operand.coefficient
+                        #
+                        # elif first_operand.has_coef() and second_operand.has_constant():
+                        #     coefficient = first_operand.coefficient / second_operand.constant
+                        #
+                        # else:
+                        #     raise RuntimeError("Unsupported expression, can't have exponential variables")
 
                         node = EquationNode(coefficient=coefficient, constant=constant)
+
+                elif is_function(tok):
+                    operand = stack.pop()
+
+                    # Functions are only allowed in simple expressions, not in equations, so there should be no coeffs.
+                    if operand.has_coef():
+                        raise RuntimeError("Function not allowed in equations")
+
+                    # Make sure there's a value to work with
+                    if not operand.has_constant():
+                        raise RuntimeError("Missing value for trigonometric function")
+
+                    if is_trigonometric(tok):
+                        node = EquationNode(constant=tok.oper(operand.constant))
+
+                    elif isinstance(tok, LnFunctionToken):
+                        node = EquationNode(constant=math.log(operand.constant, math.e))
+
+                    elif isinstance(tok, LogFunctionToken):
+                        base = 10
+
+                        if tok.has_custom_base:
+                            base = stack.pop().constant
+
+                        node = EquationNode(constant=math.log(operand.constant, base))
 
             if node is not None:
                 logger.debug(node)
@@ -197,8 +250,15 @@ class Parser:
 
         logger.debug(stack)
 
+        arred = lambda x, n: x * (10 ** n) // 1 / (10 ** n)
+
+        logger.info("Input: {}".format(input))
         if is_equation:
-            logger.info("x = {}".format(-stack[-1].constant / stack[-1].coefficient))
+            value = -stack[-1].constant / stack[-1].coefficient
+            value = arred(value, 10)
+            logger.info("x = {}".format(value))
 
         else:
-            logger.info(stack[-1].constant)
+            value = stack[-1].constant
+            value = arred(value, 10)
+            logger.info(value)

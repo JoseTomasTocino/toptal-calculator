@@ -1,3 +1,6 @@
+import math
+
+
 class Token:
     def __str__(self):
         return "Token: {}".format(self.__class__.__name__)
@@ -52,35 +55,54 @@ class DivisionOperatorToken(Token): pass
 class EqualSignToken(Token): pass
 
 
-class LogFunctionToken(Token): pass
+class LogFunctionToken(Token):
+    def __init__(self):
+        self.has_custom_base = False
 
+    def __str__(self):
+        return "Token: LogFunction ({})".format("Custom base" if self.has_custom_base else "10-base")
 
 class LnFunctionToken(Token): pass
 
 
-class SinFunctionToken(Token): pass
+class SinFunctionToken(Token):
+    def __init__(self):
+        self.oper = math.sin
 
 
-class CosFunctionToken(Token): pass
+class CosFunctionToken(Token):
+    def __init__(self):
+        self.oper = math.cos
 
 
-class TanFunctionToken(Token): pass
+class TanFunctionToken(Token):
+    def __init__(self):
+        self.oper = math.tan
 
 
-class CtanFunctionToken(Token): pass
+class CtanFunctionToken(Token):
+    def __init__(self):
+        self.oper = lambda x: 1 / math.tan(x)
 
 
-class PiConstantToken(Token): pass
+class PiConstantToken(Token):
+    def __init__(self):
+        self.value = math.pi
 
 
-class EulerConstantToken(Token): pass
+class EulerConstantToken(Token):
+    def __init__(self):
+        self.value = math.e
 
 
 is_operand = lambda token: isinstance(token, OperandToken)
 is_variable = lambda token: isinstance(token, VariableToken)
 is_constant = lambda token: isinstance(token, (PiConstantToken, EulerConstantToken))
 is_operator = lambda token: isinstance(token, (
-ProductOperatorToken, DivisionOperatorToken, PlusOperatorToken, MinusOperatorToken))
-is_function = lambda token: isinstance(token, (LogFunctionToken, SinFunctionToken, CosFunctionToken))
+    ProductOperatorToken, DivisionOperatorToken, PlusOperatorToken, MinusOperatorToken))
+is_function = lambda token: isinstance(token, (
+    LogFunctionToken, LnFunctionToken, SinFunctionToken, CosFunctionToken, TanFunctionToken, CtanFunctionToken))
+is_trigonometric = lambda token: isinstance(token,
+                                            (SinFunctionToken, CosFunctionToken, TanFunctionToken, CtanFunctionToken))
 is_left_paren = lambda token: isinstance(token, OpenParenthesisToken)
 is_right_paren = lambda token: isinstance(token, CloseParenthesisToken)

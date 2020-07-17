@@ -84,8 +84,10 @@ def tokenize(input: str):
 
     # Token List postprocessing, in particular:
     # - Add product operator between operand and variable
-    # - Add product operator between operand and open parenthesis
+    # - Add product operator between operand and constant
+    # - Add product operator between operand and open parenthesis (except for the Log function)
     # - Add product operator between variable and open parenthesis
+    # - Mark LogFunctionToken to have a custom base if followed by two ConstantTokens
 
     processed_token_list = []
 
@@ -96,18 +98,32 @@ def tokenize(input: str):
             break
 
         if is_operand(tok):
+
+            # - Add product operator between operand and variable
             if is_variable(token_list[i + 1]):
-                logger.debug("Adding implicit product operator")
+                logger.debug("Adding implicit product operator between operand and variable")
                 processed_token_list.append(tokens.ProductOperatorToken())
 
-            elif is_left_paren(token_list[i + 1]):
-                logger.debug("Adding implicit product operator")
+            elif is_constant(token_list[i + 1]):
+                logger.debug("Adding implicit product operator between operand and constant")
+                processed_token_list.append(tokens.ProductOperatorToken())
+
+            # - Add product operator between operand and open parenthesis (except for the Log function)
+            elif is_left_paren(token_list[i + 1]) and not isinstance(token_list[i - 1], tokens.LogFunctionToken):
+                logger.debug("Adding implicit product operator between operand and open parenthesis")
                 processed_token_list.append(tokens.ProductOperatorToken())
 
         elif is_variable(tok):
+
+            # - Add product operator between variable and open parenthesis
             if is_left_paren(token_list[i + 1]):
-                logger.debug("Adding implicit product operator")
+                logger.debug("Adding implicit product operator between variable and open parenthesis")
                 processed_token_list.append(tokens.ProductOperatorToken())
+
+        # - Mark LogFunctionToken to have a custom base if followed by two ConstantTokens or a ConstantToken and open parenthesis
+        elif isinstance(tok, tokens.LogFunctionToken) and i < len(token_list) - 2 and is_operand(
+                token_list[i + 1]) and (is_constant(token_list[i + 2]) or is_left_paren(token_list[i + 2])):
+            tok.has_custom_base = True
 
     return processed_token_list
 
