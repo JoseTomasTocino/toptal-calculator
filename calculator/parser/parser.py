@@ -5,7 +5,7 @@ from calculator.parser.tokenizer import tokenize, infix_to_postfix
 from calculator.parser.tokens import EqualSignToken, OperandToken, is_variable, MinusOperatorToken, \
     OpenParenthesisToken, CloseParenthesisToken, is_operand, is_operator, PlusOperatorToken, ProductOperatorToken, \
     DivisionOperatorToken, is_function, is_trigonometric, LnFunctionToken, LogFunctionToken, \
-    is_constant
+    is_constant, VariableToken
 
 logger = logging.getLogger(__name__)
 
@@ -59,6 +59,12 @@ class Parser:
                 token_list.insert(i + 1, OpenParenthesisToken())
                 token_list.append(CloseParenthesisToken())
                 break
+
+        # Make sure there are no variables if it's not an equation
+        if not is_equation:
+            for i, tok in enumerate(token_list):
+                if isinstance(tok, VariableToken):
+                    raise RuntimeError("Variable '{}' found in non-equation".format(tok.value))
 
         # For expressions work out whether we're dealing with normal or postfix expressions
         # If there are two consecutive operands, then it's a postfix (or an invalid) expression
