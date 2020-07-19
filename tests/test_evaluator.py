@@ -27,7 +27,13 @@ class TestEvaluator(unittest.TestCase):
     def test_division(self):
         self.assertEqual(6, evaluator.evaluate('60 / 10'))
         self.assertEqual(20, evaluator.evaluate('4x / 2 = 40'))
-        self.assertEqual(2, evaluator.evaluate('20 / (2x) = 5'))
+
+        with self.assertRaises(RuntimeError):
+            evaluator.evaluate('20 / (2x) = 5')
+
+    def test_empty_expression(self):
+        with self.assertRaises(RuntimeError):
+            evaluator.evaluate("")
 
     def test_simple_equation(self):
         self.assertEqual(5, evaluator.evaluate('x = 5'))
@@ -35,7 +41,39 @@ class TestEvaluator(unittest.TestCase):
 
     def test_bad_expression(self):
         with self.assertRaises(RuntimeError):
+            evaluator.evaluate('5 + ')
+
+    def test_bad_equation(self):
+        with self.assertRaises(RuntimeError):
             evaluator.evaluate('5x + 2')
 
         with self.assertRaises(RuntimeError):
             evaluator.evaluate('5x * x = 5')
+
+        with self.assertRaises(RuntimeError):
+            evaluator.evaluate('x + y = 0')
+
+        with self.assertRaises(RuntimeError):
+            evaluator.evaluate('5 + 2 = 0')
+
+        with self.assertRaises(RuntimeError):
+            evaluator.evaluate('5x + 2 = 0 = 0')
+
+        with self.assertRaises(RuntimeError):
+            evaluator.evaluate("x/(2x) = 5")
+
+    def test_functions(self):
+        with self.assertRaises(RuntimeError):
+            evaluator.evaluate("sin (5x) = 5")
+
+        with self.assertRaises(RuntimeError):
+            evaluator.evaluate("sin")
+
+    def test_trigonometric(self):
+        self.assertAlmostEqual(evaluator.evaluate("sin(pi)"), math.sin(math.pi))
+        self.assertAlmostEqual(evaluator.evaluate("cos(pi)"), math.cos(math.pi))
+
+    def test_log(self):
+        self.assertEqual(evaluator.evaluate("log 100"), 2)
+        self.assertAlmostEqual(evaluator.evaluate("log 100 (1000)"), 1.5)
+        self.assertAlmostEqual(evaluator.evaluate("ln e"), 1)

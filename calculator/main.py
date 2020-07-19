@@ -43,7 +43,7 @@ def main():
 
     # evaluator.evaluate("20 / (2x) = 5", False)
     # evaluator.evaluate("(3(7x-1)+10x-4+3x)=90x+1")
-    evaluator.evaluate("6+x=0=0")
+    evaluator.evaluate("sin(pi)")
 
     # evaluator.evaluate("(3+(4-1))*5")
     # evaluator.evaluate("2 * x + 0.5 = 1")
@@ -58,6 +58,6 @@ def main():
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
-    # logging.basicConfig(level=logging.INFO)
+    # logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
     main()

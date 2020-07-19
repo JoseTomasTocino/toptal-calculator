@@ -195,8 +195,7 @@ def evaluate(input, is_postfix=False):
                             constant += first_operand.constant / second_operand.constant
 
                         if second_operand.has_coef():
-                            if coefficient is None: coefficient = 0
-                            coefficient += first_operand.constant / second_operand.coefficient
+                            raise RuntimeError("Unsupported expression, non-linear equations are not supported")
 
                     if first_operand.has_coef():
                         if second_operand.has_constant():
@@ -209,7 +208,11 @@ def evaluate(input, is_postfix=False):
                     node = EquationNode(coefficient=coefficient, constant=constant)
 
             elif tokens.is_function(tok):
-                operand = stack.pop()
+                try:
+                    operand = stack.pop()
+
+                except IndexError as e:
+                    raise RuntimeError("Missing value for trigonometric function")
 
                 # Functions are only allowed in simple expressions, not in equations, so there should be no coeffs.
                 if operand.has_coef():
