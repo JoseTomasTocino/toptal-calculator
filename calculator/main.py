@@ -42,7 +42,8 @@ def main():
     # evaluator.evaluate("(4-2z)/3 = 3/4 - (5z)/6")
 
     # evaluator.evaluate("20 / (2x) = 5", False)
-    evaluator.evaluate("(3(7x-1)+10x-4+3x)=90x+1")
+    # evaluator.evaluate("(3(7x-1)+10x-4+3x)=90x+1")
+    evaluator.evaluate("6+x=0=0")
 
     # evaluator.evaluate("(3+(4-1))*5")
     # evaluator.evaluate("2 * x + 0.5 = 1")

@@ -16,6 +16,7 @@
             Welcome to the Toptal Calculator, a test project built by <a href="https://josetomastocino.com">José
             Tomás Tocino</a> for the Toptal developer screening process.
         </p>
+
         <div id="app">
             <form v-on:submit.prevent="evaluate">
                 <div class="columns is-multiline">
@@ -23,7 +24,8 @@
                         <label class="label" for="expression">Enter expression:</label>
                         <div class="control">
                             <input type="text" class="input" v-bind:class="{'is-danger': error_msg}" id="expression"
-                                   v-model="expression_input">
+                                   v-model="expression_input"
+                                   placeholder="Type an expression like 5 + 2 or an equation like 5x = 20">
                         </div>
                         <p class="help is-danger" v-if="error_msg">{{error_msg}}</p>
                     </div>
@@ -51,6 +53,32 @@
             <div class="notification is-info mt-5" v-if="expression_result">
                 Expression result: {{expression_result}}
             </div>
+
+            <div class="content is-fullwidth mt-5">
+                <table class="table is-fullwidth">
+                    <thead>
+                    <tr>
+                        <th>Input expression</th>
+                        <th>Notation</th>
+                        <th>Evaluation status</th>
+                        <th>Evaluation result</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr v-for="result in results_container">
+                        <td>{{result.input}}</td>
+                        <td>{{result.notation}}</td>
+                        <td>
+                            <span v-if="!result.error" class="tag is-success">Success</span>
+                            <span v-if="result.error" class="tag is-danger">Error</span>
+                        </td>
+                        <td v-if="!result.error">{{result.result}}</td>
+                        <td v-if="result.error">{{result.error_str}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </section>
@@ -60,11 +88,12 @@
 <script>
 
     class EvaluationResult {
-        constructor(input, notation, result, error) {
+        constructor(input, notation, result, error, error_str) {
             this.input = input;
             this.notation = notation;
             this.result = result;
             this.error = error;
+            this.error_str = error_str;
         }
     }
 
@@ -77,12 +106,13 @@
                 expression_notation: "standard",
                 expression_result: null,
                 error_msg: null,
+
+                results_container: []
             }
         },
         methods: {
             evaluate: function (event) {
                 if (this.sending) {
-                    console.log("Already sending");
                     return;
                 }
 
@@ -96,6 +126,9 @@
                         }
                     })
                     .then(response => {
+                        let result = new EvaluationResult(response.data.expression, response.data.notation, response.data.result, response.data.error, response.data.error_str);
+                        this.results_container.unshift(result);
+
                         if (response.data.error) {
                             this.error_msg = response.data.error_str;
                         } else {

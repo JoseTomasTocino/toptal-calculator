@@ -15,13 +15,16 @@ def index():
     try:
         retval = {
             'expression': expression,
+            'notation': notation,
             'result': evaluate(expression, notation == 'rpn'),
-            'error': False
+            'error': False,
+            'error_str': ''
         }
 
     except RuntimeError as e:
         retval = {
             'expression': expression,
+            'notation': notation,
             'result': '',
             'error': True,
             'error_str': str(e)
@@ -30,6 +33,7 @@ def index():
     except BaseException as e:
         retval = {
             'expression': expression,
+            'notation': notation,
             'result': '',
             'error': True,
             'error_str': "Other error: " + str(e)

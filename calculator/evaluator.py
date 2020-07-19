@@ -62,9 +62,13 @@ def evaluate(input, is_postfix=False):
         else:
             raise RuntimeError("Incorrect equation: missing variable")
 
-        # Make sure there's just one equal sign
-        if len([x for x in token_list if isinstance(x, tokens.EqualSignToken)]) > 1:
+        # Make sure there are no more equal signs
+        if len([x for x in token_list if isinstance(x, tokens.EqualSignToken)]):
             raise RuntimeError("Incorrect equation: more than one equal sign found")
+
+        # Make sure all variables are the same
+        if len(set([x.value for x in token_list if isinstance(x, tokens.VariableToken)])) > 1:
+            raise RuntimeError("Only one variable allowed")
 
     # Make sure there are no variables if it's not an equation
     if not is_equation:
