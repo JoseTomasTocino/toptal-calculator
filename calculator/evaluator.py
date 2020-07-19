@@ -19,7 +19,7 @@ class EquationNode:
         return self.coefficient is not None
 
     def __str__(self):
-        return "EquationNode, coeff = {}, constant = {}".format(self.coefficient, self.constant)
+        return "[EquationNode, coeff = {}, constant = {}]".format(self.coefficient, self.constant)
 
     def __repr__(self):
         return self.__str__()
@@ -85,6 +85,9 @@ def evaluate(input, is_postfix=False):
                 second_operand = stack.pop()
                 first_operand = stack.pop()
 
+                logger.debug("  Oper A: %r", first_operand)
+                logger.debug("  Oper B: %r", second_operand)
+
                 if isinstance(tok, tokens.PlusOperatorToken):
                     constant = 0
                     coefficient = 0
@@ -134,11 +137,12 @@ def evaluate(input, is_postfix=False):
                     node = EquationNode(coefficient=coefficient, constant=constant)
 
                 elif isinstance(tok, tokens.ProductOperatorToken):
-                    constant = 0
+                    constant = None
                     coefficient = None
 
                     if first_operand.has_constant():
                         if second_operand.has_constant():
+                            if constant is None: constant = 0
                             constant += first_operand.constant * second_operand.constant
 
                         if second_operand.has_coef():
@@ -156,11 +160,12 @@ def evaluate(input, is_postfix=False):
                     node = EquationNode(coefficient=coefficient, constant=constant)
 
                 elif isinstance(tok, tokens.DivisionOperatorToken):
-                    constant = 0
+                    constant = None
                     coefficient = None
 
                     if first_operand.has_constant():
                         if second_operand.has_constant():
+                            if constant is None: constant = 0
                             constant += first_operand.constant / second_operand.constant
 
                         if second_operand.has_coef():
@@ -203,10 +208,10 @@ def evaluate(input, is_postfix=False):
                     node = EquationNode(constant=math.log(operand.constant, base))
 
         if node is not None:
-            logger.debug(node)
+            logger.debug("Pushing to stack: %r", node)
             stack.append(node)
 
-    logger.debug(stack)
+    logger.debug("Final stack %r", stack)
 
     arred = lambda x, n: x * (10 ** n) // 1 / (10 ** n)
 
