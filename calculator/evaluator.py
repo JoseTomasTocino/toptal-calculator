@@ -100,8 +100,12 @@ def evaluate(input, is_postfix=False):
 
         else:
             if tokens.is_operator(tok):
-                second_operand = stack.pop()
-                first_operand = stack.pop()
+                try:
+                    second_operand = stack.pop()
+                    first_operand = stack.pop()
+
+                except IndexError:
+                    raise RuntimeError("Bad expression, missing operands")
 
                 logger.debug("  Oper A: %r", first_operand)
                 logger.debug("  Oper B: %r", second_operand)

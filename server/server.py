@@ -10,11 +10,12 @@ CORS(app)
 @app.route("/", methods=['GET'])
 def index():
     expression = request.args.get('expression', '')
+    notation = request.args.get('notation', 'standard')
 
     try:
         retval = {
             'expression': expression,
-            'result': evaluate(expression),
+            'result': evaluate(expression, notation == 'rpn'),
             'error': False
         }
 
@@ -24,6 +25,14 @@ def index():
             'result': '',
             'error': True,
             'error_str': str(e)
+        }
+
+    except BaseException as e:
+        retval = {
+            'expression': expression,
+            'result': '',
+            'error': True,
+            'error_str': "Other error: " + str(e)
         }
 
     return jsonify(retval)

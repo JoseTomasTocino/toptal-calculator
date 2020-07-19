@@ -32,9 +32,9 @@
                         <label class="label" for="notation">Notation type:</label>
                         <div class="control">
                             <div class="select is-fullwidth">
-                                <select id="notation">
-                                    <option>Standard notation</option>
-                                    <option>Reverse Polish Notation</option>
+                                <select id="notation" v-model="expression_notation">
+                                    <option value="standard">Standard notation</option>
+                                    <option value="rpn">Reverse Polish Notation</option>
                                 </select>
                             </div>
                         </div>
@@ -58,12 +58,23 @@
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
 <script>
+
+    class EvaluationResult {
+        constructor(input, notation, result, error) {
+            this.input = input;
+            this.notation = notation;
+            this.result = result;
+            this.error = error;
+        }
+    }
+
     new Vue({
         el: '#app',
         data() {
             return {
                 sending: false,
                 expression_input: "",
+                expression_notation: "standard",
                 expression_result: null,
                 error_msg: null,
             }
@@ -77,7 +88,13 @@
 
                 this.sending = true;
                 axios
-                    .get('http://localhost:5000/?expression=' + encodeURIComponent(this.expression_input))
+                    .get('http://localhost:5000', {
+                        timeout: 1000,
+                        params: {
+                            expression: this.expression_input,
+                            notation: this.expression_notation
+                        }
+                    })
                     .then(response => {
                         if (response.data.error) {
                             this.error_msg = response.data.error_str;
@@ -87,14 +104,13 @@
                         }
 
                         this.sending = false;
+                    })
+                    .catch(error => {
+                        this.error_msg = error;
+                        this.sending = false;
                     });
             }
         }
-        // mounted() {
-        //     axios
-        //         .get('http://localhost:5000/?expression=' + encodeURIComponent('5 + 65'))
-        //         .then(response => (this.info = response))
-        // }
     })
 </script>
 </body>
