@@ -26,6 +26,10 @@ class EquationNode:
 
 
 def evaluate(input, is_postfix=False):
+    input = input.strip()
+    if not input:
+        raise RuntimeError("Missing expression")
+
     logger.debug("Evaluating input '%s'", input)
 
     token_list = tokenize(input)
@@ -47,6 +51,20 @@ def evaluate(input, is_postfix=False):
             token_list.insert(i + 1, tokens.OpenParenthesisToken())
             token_list.append(tokens.CloseParenthesisToken())
             break
+
+    # Equation testing
+    if is_equation:
+
+        # Make sure there are variables if it's an equation
+        for i, tok in enumerate(token_list):
+            if isinstance(tok, tokens.VariableToken):
+                break
+        else:
+            raise RuntimeError("Incorrect equation: missing variable")
+
+        # Make sure there's just one equal sign
+        if len([x for x in token_list if isinstance(x, tokens.EqualSignToken)]) > 1:
+            raise RuntimeError("Incorrect equation: more than one equal sign found")
 
     # Make sure there are no variables if it's not an equation
     if not is_equation:

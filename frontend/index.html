@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculator frontend</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+</head>
+<body>
+<section class="section">
+    <div class="container">
+        <h1 class="title">
+            Toptal Calculator
+        </h1>
+        <p class="subtitle">
+            Welcome to the Toptal Calculator, a test project built by <a href="https://josetomastocino.com">José
+            Tomás Tocino</a> for the Toptal developer screening process.
+        </p>
+        <div id="app">
+            <form v-on:submit.prevent="evaluate">
+                <div class="columns is-multiline">
+                    <div class="field column is-half mb-0">
+                        <label class="label" for="expression">Enter expression:</label>
+                        <div class="control">
+                            <input type="text" class="input" v-bind:class="{'is-danger': error_msg}" id="expression"
+                                   v-model="expression_input">
+                        </div>
+                        <p class="help is-danger" v-if="error_msg">{{error_msg}}</p>
+                    </div>
+
+                    <div class="field column is-half mb-0">
+                        <label class="label" for="notation">Notation type:</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select id="notation">
+                                    <option>Standard notation</option>
+                                    <option>Reverse Polish Notation</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field column is-full">
+                        <button class="button is-primary is-fullwidth" v-bind:class="{'is-loading': sending}">Evaluate
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+
+            <div class="notification is-info mt-5" v-if="expression_result">
+                Expression result: {{expression_result}}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                sending: false,
+                expression_input: "",
+                expression_result: null,
+                error_msg: null,
+            }
+        },
+        methods: {
+            evaluate: function (event) {
+                if (this.sending) {
+                    console.log("Already sending");
+                    return;
+                }
+
+                this.sending = true;
+                axios
+                    .get('http://localhost:5000/?expression=' + encodeURIComponent(this.expression_input))
+                    .then(response => {
+                        if (response.data.error) {
+                            this.error_msg = response.data.error_str;
+                        } else {
+                            this.error_msg = "";
+                            this.expression_result = response.data.result;
+                        }
+
+                        this.sending = false;
+                    });
+            }
+        }
+        // mounted() {
+        //     axios
+        //         .get('http://localhost:5000/?expression=' + encodeURIComponent('5 + 65'))
+        //         .then(response => (this.info = response))
+        // }
+    })
+</script>
+</body>
+</html>
