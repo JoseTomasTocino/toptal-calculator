@@ -2,6 +2,7 @@ import math
 import unittest
 
 from calculator import evaluator
+from calculator.evaluator import EquationNode
 
 
 class TestEvaluator(unittest.TestCase):
@@ -77,3 +78,10 @@ class TestEvaluator(unittest.TestCase):
         self.assertEqual(evaluator.evaluate("log 100"), 2)
         self.assertAlmostEqual(evaluator.evaluate("log 100 (1000)"), 1.5)
         self.assertAlmostEqual(evaluator.evaluate("ln e"), 1)
+
+    def test_equation_node_print(self):
+        node = EquationNode(coefficient=5)
+        self.assertEqual(str(node), "[EquationNode, coeff = 5, constant = None]")
+
+        node = EquationNode(constant=5)
+        self.assertEqual(repr(node), "[EquationNode, coeff = None, constant = 5]")
