@@ -25,7 +25,8 @@ def tokenize(input: str):
         elif char == '+':
             token_list.append(tokens.PlusOperatorToken())
 
-        elif char == '-':
+        # Only compute the '-' char as the minus operator if it's not part of a negative operand
+        elif char == '-' and token_list and not isinstance(token_list[-1], tokens.OpenParenthesisToken):
             token_list.append(tokens.MinusOperatorToken())
 
         elif char == '*':
@@ -68,7 +69,7 @@ def tokenize(input: str):
                 i = j - 1
                 token_list.append(tokens.VariableToken(''.join(token_components)))
 
-        elif char.isdecimal():
+        elif char.isdecimal() or char == '-':
             token_components = [char]
 
             # Keep consuming decimal characters
