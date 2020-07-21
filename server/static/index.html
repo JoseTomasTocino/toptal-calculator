@@ -118,7 +118,7 @@
 
                 this.sending = true;
                 axios
-                    .get('http://localhost:5000', {
+                    .get('http://localhost:5000/evaluate', {
                         timeout: 1000,
                         params: {
                             expression: this.expression_input,
