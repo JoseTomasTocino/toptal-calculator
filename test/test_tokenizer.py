@@ -113,6 +113,34 @@ class TestTokenizer(TestCase):
 
         self.assertListEqual(computed_token_list, token_list)
 
+    def test_tokenize_negative(self):
+        expression = "-5 + 2"
+
+        token_list = [
+            tokens.OperandToken(-5),
+            tokens.PlusOperatorToken(),
+            tokens.OperandToken(2)
+        ]
+
+        computed_token_list = tokenize(expression)
+
+        self.assertListEqual(computed_token_list, token_list)
+
+    def test_tokenize_negative_within_parenthesis(self):
+        expression = "(-5 + 2)"
+
+        token_list = [
+            tokens.OpenParenthesisToken(),
+            tokens.OperandToken(-5),
+            tokens.PlusOperatorToken(),
+            tokens.OperandToken(2),
+            tokens.CloseParenthesisToken()
+        ]
+
+        computed_token_list = tokenize(expression)
+
+        self.assertListEqual(computed_token_list, token_list)
+
     def test_tokenize_constants(self):
         expression = "pi * e"
         token_list = [
