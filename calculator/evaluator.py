@@ -77,8 +77,15 @@ def evaluate(input, is_postfix=False):
                 raise RuntimeError("Variable '{}' found in non-equation".format(tok.value))
 
     if not is_postfix:
-        logger.debug("Converting to postfix")
-        token_list = infix_to_postfix(token_list)
+        # Even if it's not postfix, run a dumb detection algorithm just to make sure
+        for i, tok in enumerate(token_list[:-1]):
+            if isinstance(tok, tokens.OperandToken) and isinstance(token_list[i + 1], tokens.OperandToken):
+                is_postfix = True
+                break
+
+        if not is_postfix:
+            logger.debug("Converting to postfix")
+            token_list = infix_to_postfix(token_list)
 
     logger.debug("Tokens in postfix:")
     for tok in token_list:
