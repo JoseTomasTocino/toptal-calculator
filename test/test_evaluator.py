@@ -16,10 +16,12 @@ class TestEvaluator(unittest.TestCase):
     def test_addition(self):
         self.assertEqual(3, evaluator.evaluate('2 + 1'))
         self.assertEqual(5, evaluator.evaluate('x + x = 10'))
+        self.assertEqual(0, evaluator.evaluate('-10 + 5 + 5'))
 
     def test_subtraction(self):
         self.assertEqual(3, evaluator.evaluate('5 - 2'))
         self.assertEqual(5, evaluator.evaluate('3x - x = 10'))
+        self.assertEqual(0, evaluator.evaluate('5 + 5 - 10'))
 
     def test_product(self):
         self.assertEqual(6, evaluator.evaluate('3 * 2'))
