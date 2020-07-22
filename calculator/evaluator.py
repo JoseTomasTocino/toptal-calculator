@@ -122,50 +122,42 @@ def evaluate(input, is_postfix=False):
                 logger.debug("  Oper B: %r", second_operand)
 
                 if isinstance(tok, tokens.PlusOperatorToken):
-                    constant = 0
-                    coefficient = 0
+                    constant = None
+                    coefficient = None
 
                     if first_operand.constant is not None:
                         constant = first_operand.constant
 
                     if second_operand.constant is not None:
+                        if constant is None: constant = 0
                         constant += second_operand.constant
-
-                    if constant == 0:
-                        constant = None
 
                     if first_operand.coefficient is not None:
                         coefficient = first_operand.coefficient
 
                     if second_operand.coefficient is not None:
+                        if coefficient is None: coefficient = 0
                         coefficient += second_operand.coefficient
-
-                    if coefficient == 0:
-                        coefficient = None
 
                     node = EquationNode(coefficient=coefficient, constant=constant)
 
                 elif isinstance(tok, tokens.MinusOperatorToken):
-                    constant = 0
-                    coefficient = 0
+                    constant = None
+                    coefficient = None
 
                     if first_operand.constant is not None:
                         constant = first_operand.constant
 
                     if second_operand.constant is not None:
+                        if constant is None: constant = 0
                         constant -= second_operand.constant
-
-                    if constant == 0:
-                        constant = None
 
                     if first_operand.coefficient is not None:
                         coefficient = first_operand.coefficient
 
                     if second_operand.coefficient is not None:
+                        if coefficient is None: coefficient = 0
                         coefficient -= second_operand.coefficient
-
-                    if coefficient == 0:
-                        coefficient = None
 
                     node = EquationNode(coefficient=coefficient, constant=constant)
 
