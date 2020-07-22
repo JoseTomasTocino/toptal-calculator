@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 
@@ -8,6 +9,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'
 from calculator.evaluator import evaluate
 
 app = Flask(__name__, static_folder='static')
+logging.basicConfig(level=logging.DEBUG)
 CORS(app)
 
 

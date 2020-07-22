@@ -27,16 +27,27 @@ class EquationNode:
 
 def evaluate(input, is_postfix=False):
     input = input.strip()
+
     if not input:
         raise RuntimeError("Missing expression")
 
     logger.debug("Evaluating input '%s'", input)
 
+    # Tokenize the input
     token_list = tokenize(input)
 
     logger.debug("Tokens:")
     for tok in token_list:
         logger.debug("    %r", tok)
+
+    # In Postfix notation, make sure there are no parenthesis, variables or equal signs
+    if is_postfix:
+        for tok in token_list:
+            if isinstance(tok, (tokens.OpenParenthesisToken, tokens.CloseParenthesisToken)):
+                raise RuntimeError("Parenthesis are not allowed in postfix expressions")
+
+            if isinstance(tok, (tokens.EqualSignToken, tokens.VariableToken)):
+                raise RuntimeError("Equations cannot be written in postfix notation")
 
     # Decide whether it's an expression or an equation
     is_equation = False
@@ -80,6 +91,7 @@ def evaluate(input, is_postfix=False):
         # Even if it's not postfix, run a dumb detection algorithm just to make sure
         for i, tok in enumerate(token_list[:-1]):
             if isinstance(tok, tokens.OperandToken) and isinstance(token_list[i + 1], tokens.OperandToken):
+                logger.debug("Expression already in postfix")
                 is_postfix = True
                 break
 

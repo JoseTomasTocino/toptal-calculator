@@ -1,6 +1,6 @@
 import unittest
 
-from calculator import tokens
+from calculator import tokens, evaluator
 from calculator.parser import tokenize, infix_to_postfix
 
 
@@ -88,3 +88,13 @@ class MyTestPostfixCase(unittest.TestCase):
         ]
 
         self.assertListEqual(postfix_token_list, token_list)
+
+    def test_equation_in_postfix_not_allowed(self):
+        with self.assertRaises(RuntimeError):
+            evaluator.evaluate('(5 + 2)', True)
+
+        with self.assertRaises(RuntimeError):
+            evaluator.evaluate('x + 1', True)
+
+        with self.assertRaises(RuntimeError):
+            evaluator.evaluate('x = 5', True)
