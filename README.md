@@ -9,16 +9,16 @@ and linear equations.
 As previously stated, this calculator can process arithmetic expressions and
 solve linear equations, so long as they're properly formatted. In particular:
 
-* The calculator can do calculations in both infix and postfix (RPN) notation.
-* The calculator supports parentheses in infix notation.
-* The calculator supports addition, subtraction, multiplication, division, logarithms (log and ln), trigonometric functions (sin, cos, tan, ctan).
-* The calculator works the known constants of Archimedes’ constant (Pi) and Euler’s number e (e).
-* The calculator can solve simple linear equations with a single variable.
+* The calculator can solve **linear equations** with a single variable.
+* The calculator can do calculations in both **infix and postfix (RPN) notation**.
+* The calculator supports **parentheses** in infix notation.
+* The calculator supports **addition, subtraction, multiplication, division, logarithms (log and ln), trigonometric
+  functions (sin, cos, tan, ctan)**.
+* The calculator works with the known constants of **Archimedes’ constant** (Pi) and **Euler’s number** (e).
 
 ## Implementation
 
-The calculator is implemented with Python 3.8 with no external dependencies or libraries.
-The core resides in the `calculator` package. It contains an `evaluator` module with an
+The calculator is implemented in Python 3.8 with no external dependencies or libraries. The core resides in the `calculator` package. It contains an `evaluator` module with an
 `evaluate` function, which receives a string with the expression or equation and
 does all the processing.
 
