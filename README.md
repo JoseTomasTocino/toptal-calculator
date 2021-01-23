@@ -1,5 +1,7 @@
 # ToptalCalculator
 
+![GitHub](https://img.shields.io/github/license/josetomastocino/toptal-calculator?style=flat-square) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/josetomastocino/toptal-calculator/CI?style=flat-square) ![GitHub top language](https://img.shields.io/github/languages/top/josetomastocino/toptal-calculator?style=flat-square)
+
 ToptalCalculator is an advanced calculator built in Python by [José Tomás Tocino](https://josetomatocino.com)
 for the Toptal Technical Screening process. It's able to process both **arithmetic expressions**
 and **linear equations**, and has a simple companion **web interface** built with Flask to try the project.
