@@ -62,6 +62,7 @@ class LogFunctionToken(Token):
     def __str__(self):
         return "Token: LogFunctionToken ({})".format("Custom base" if self.has_custom_base else "10-base")
 
+
 class LnFunctionToken(Token): pass
 
 
