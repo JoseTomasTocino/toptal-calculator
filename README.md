@@ -1,13 +1,15 @@
 # ToptalCalculator
 
-ToptalCalculator is an advanced calculator built in Python by [José Tomás Tocino](https://josetomatocino.com) 
-for the Toptal Technical Screening process. It's able to process arithmetic expressions
-and linear equations.
+ToptalCalculator is an advanced calculator built in Python by [José Tomás Tocino](https://josetomatocino.com)
+for the Toptal Technical Screening process. It's able to process both **arithmetic expressions**
+and **linear equations**, and has a simple companion **web interface** built with Flask to try the project.
+
+![Capture](assets/capture.png)
 
 ## Capabilities
 
-As previously stated, this calculator can process arithmetic expressions and
-solve linear equations, so long as they're properly formatted. In particular:
+As previously stated, this calculator can process arithmetic expressions and solve linear equations, so long as they're
+properly formatted. In particular:
 
 * The calculator can solve **linear equations** with a single variable.
 * The calculator can do calculations in both **infix and postfix (RPN) notation**.
@@ -47,23 +49,23 @@ Python3 properly installing by running:
 python3 --version
 ```
 
-Then, create a new virtual environment:
+Then, make sure you have pip and pipenv installed:
 
 ```
-python3 -mvenv env
+python3 -m pip install --upgrade pip
+python3 -m pip install --upgrade pipenv wheel
 ```
 
-Activate the environment and install the requirements
+Install the dependencies:
 
 ```
-source env/bin/activate
-pip install -r requirements.txt
+pipenv install
 ```
 
 Make sure the code is working properly by **running the tests**, using:
 
 ```
-python -m unittests
+pipenv run pytest
 ```
 
 It should report something like:
